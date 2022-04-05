@@ -72,8 +72,7 @@ checksum = "c4872d67bab6358e59559027aa3b9157c53d9358c51423c17554809a8858e0f8"
 name = "cardboardmc"
 version = "0.1.0"
 dependencies = [
- "craftio-rs",
- "mcproto-rs",
+ "client_lib",
 ]
 
 [[package]]
@@ -95,6 +94,14 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "12f8e7987cbd042a63249497f41aed09f8e65add917ea6566effbc56578d6801"
 dependencies = [
  "generic-array",
+]
+
+[[package]]
+name = "client_lib"
+version = "0.1.0"
+dependencies = [
+ "craftio-rs",
+ "mcproto-rs",
 ]
 
 [[package]]
