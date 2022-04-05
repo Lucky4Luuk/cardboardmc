@@ -1,11 +1,15 @@
 use client_lib::versions::V1_16_3;
-use client_lib::MpClient;
+use client_lib::{
+    MpClient,
+    User,
+};
 
 fn main() {
     println!("Hello, world!");
 
-    let mut mpc = MpClient::<V1_16_3>::new("localhost", None);
+    let user = User::new("JefBezbo".to_string());
+    let mut mpc = MpClient::<V1_16_3>::new(user.clone(), "localhost", None);
     mpc.login();
 
-    println!("Handshake!");
+    println!("Logged in!");
 }
