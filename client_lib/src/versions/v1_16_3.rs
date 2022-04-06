@@ -34,7 +34,7 @@ impl super::Version for V1_16_3 {
             .map_err(|e| e.to_string())?
             .ok_or("Did not receive encryption packet!".to_string())?;
         if let Packet753::LoginEncryptionRequest(p) = encryption_packet {
-            println!("encryption packet: {:?}", p);
+            // println!("encryption packet: {:?}", p);
         } else {
             return Err("Received the wrong packet!".to_string());
         }

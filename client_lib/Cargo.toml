@@ -8,3 +8,5 @@ edition = "2021"
 [dependencies]
 mcproto-rs = "0.2.0"
 craftio-rs = "0.1.0"
+reqwest = "0.11"
+ms_auth_mc = "0.2.0"

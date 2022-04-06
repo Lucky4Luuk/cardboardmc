@@ -7,6 +7,8 @@ use client_lib::{
 fn main() {
     println!("Hello, world!");
 
+    client_lib::auth();
+
     let user = User::new("JefBezbo".to_string());
     let mut mpc = MpClient::<V1_16_3>::new(user.clone(), "localhost", None);
     mpc.login();

@@ -8,7 +8,7 @@ pub mod versions;
 use versions::Version;
 
 mod userdata;
-pub use userdata::User;
+pub use userdata::*;
 
 pub type Connection = CraftConnection<std::io::BufReader<std::net::TcpStream>, std::net::TcpStream>;
 
