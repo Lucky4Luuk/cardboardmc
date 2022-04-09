@@ -52,6 +52,7 @@ impl super::Version for V1_16_3 {
                     Packet753::LoginSetCompression(p) => {
                         println!("compression packet: {:?}", p);
                         client.compression_threshold = *p.threshold;
+                        client.conn.set_compression_threshold(Some(*p.threshold));
                         expected_packets += 1; // We expect the next packet to be a LoginSuccess packet
                     },
                     _ => return Err(format!("Server sent the wrong packet! Packet sent: {:?}", next_packet)),
