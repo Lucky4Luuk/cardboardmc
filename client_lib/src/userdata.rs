@@ -1,34 +1,21 @@
-#[derive(Clone)]
+#[derive(Debug, Clone)]
 pub struct UserLogin {
     pub username: String,
 }
 
-#[derive(Clone)]
+#[derive(Debug, Clone)]
 pub struct UserAuth {
-
+    pub token: String,
 }
 
-#[derive(Clone)]
+/// Create this using `auth()`
+#[derive(Debug, Clone)]
 pub struct User {
     pub login: UserLogin,
     pub auth: UserAuth,
 }
 
-impl User {
-    pub fn new(username: String) -> Self {
-        let mut auth_data = UserAuth {
-
-        };
-        Self {
-            login: UserLogin {
-                username: username,
-            },
-            auth: auth_data,
-        }
-    }
-}
-
-pub fn auth() {
+pub fn auth() -> User {
     const CID: &str = "a0303825-96c6-48fd-b66a-21e88b968f44";
     let client = &reqwest::blocking::Client::new();
     let device_code = ms_auth_mc::DeviceCode::new(CID, None, client).unwrap();
@@ -41,5 +28,13 @@ pub fn auth() {
     }
 
     let mca = device_code.authenticate(client).unwrap(); // Never use unwrap here, it's used in this example for simplicity
-    println!("{:?}", mca);
+
+    User {
+        login: UserLogin {
+            username: mca.name,
+        },
+        auth: UserAuth {
+            token: mca.token,
+        },
+    }
 }

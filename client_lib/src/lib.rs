@@ -19,6 +19,8 @@ pub struct MpClient<V: Version> {
     conn: Connection,
     ip: String,
     port: u16,
+
+    pub(crate) compression_threshold: i32,
 }
 
 impl<V: Version> MpClient<V> {
@@ -32,10 +34,14 @@ impl<V: Version> MpClient<V> {
             conn: conn,
             ip: ip.to_owned(),
             port: port_real,
+
+            compression_threshold: 0,
         }
     }
 
     pub fn login(&mut self) {
-        V::login(&self.user, &mut self.conn, self.ip.clone(), self.port).expect("Failed to log in!"); //TODO: Error handling
+        let ip = self.ip.clone();
+        let port = self.port.clone();
+        V::login(self, ip, port).expect("Failed to log in!"); //TODO: Error handling
     }
 }
