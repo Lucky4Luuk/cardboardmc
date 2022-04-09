@@ -35,21 +35,30 @@ impl super::Version for V1_16_3 {
         // } else {
         //     return Err("Received the wrong packet!".to_string());
         // }
-        let packet_encryption_or_success = client.conn.read_packet::<RawPacket753>()
-            .map_err(|e| e.to_string())?
-            .ok_or("Did not receive a packet!".to_string())?;
-        match packet_encryption_or_success {
-            Packet753::LoginEncryptionRequest(p) => {
-                println!("encryption packet: {:?}", p);
-            },
-            Packet753::LoginSuccess(p) => {
-                println!("Offline mode server!");
-            },
-            Packet753::LoginSetCompression(p) => {
-                println!("compression packet: {:?}", p);
-                client.compression_threshold = *p.threshold;
-            },
-            _ => return Err(format!("Server sent the wrong packet! Packet sent: {:?}", packet_encryption_or_success)),
+        let mut expected_packets = 1;
+        while expected_packets > 0 {
+            expected_packets -= 1;
+            println!("Waiting for packet...");
+            if let Some(next_packet) = client.conn.read_packet::<RawPacket753>().map_err(|e| e.to_string())? {
+                match next_packet {
+                    Packet753::LoginEncryptionRequest(p) => {
+                        println!("encryption packet: {:?}", p);
+                        todo!("Implement encryption for login to online mode servers");
+                    },
+                    Packet753::LoginSuccess(p) => {
+                        println!("Offline mode server!");
+                        break;
+                    },
+                    Packet753::LoginSetCompression(p) => {
+                        println!("compression packet: {:?}", p);
+                        client.compression_threshold = *p.threshold;
+                        expected_packets += 1; // We expect the next packet to be a LoginSuccess packet
+                    },
+                    _ => return Err(format!("Server sent the wrong packet! Packet sent: {:?}", next_packet)),
+                }
+            } else {
+                break;
+            }
         }
         Ok(())
     }
