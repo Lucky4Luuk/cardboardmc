@@ -41,6 +41,7 @@ impl super::Version for V1_16_3 {
                     },
                     Packet753::LoginSuccess(_p) => {
                         println!("Login success!");
+                        client.conn.set_state(State::Play);
                         break;
                     },
                     Packet753::LoginSetCompression(p) => {
