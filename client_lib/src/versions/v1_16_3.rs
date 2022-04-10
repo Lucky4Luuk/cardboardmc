@@ -40,6 +40,7 @@ impl super::Version for V1_16_3 {
                         todo!("Implement encryption for login to online mode servers");
                     },
                     Packet753::LoginSuccess(_p) => {
+                        println!("Login success!");
                         break;
                     },
                     Packet753::LoginSetCompression(p) => {
