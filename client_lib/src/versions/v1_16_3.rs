@@ -27,14 +27,8 @@ impl super::Version for V1_16_3 {
         client.conn.write_packet(Packet753::LoginStart { 0: LoginStartSpec {
             name: client.user.login.username.clone(),
         } }).map_err(|e| e.to_string())?;
-        // let encryption_packet = conn.read_packet::<RawPacket753>()
-        //     .map_err(|e| e.to_string())?
-        //     .ok_or("Did not receive encryption packet!".to_string())?;
-        // if let Packet753::LoginEncryptionRequest(p) = encryption_packet {
-        //     println!("encryption packet: {:?}", p);
-        // } else {
-        //     return Err("Received the wrong packet!".to_string());
-        // }
+
+        // Attempt to log into server
         let mut expected_packets = 1;
         while expected_packets > 0 {
             expected_packets -= 1;
@@ -45,8 +39,7 @@ impl super::Version for V1_16_3 {
                         println!("encryption packet: {:?}", p);
                         todo!("Implement encryption for login to online mode servers");
                     },
-                    Packet753::LoginSuccess(p) => {
-                        println!("Offline mode server!");
+                    Packet753::LoginSuccess(_p) => {
                         break;
                     },
                     Packet753::LoginSetCompression(p) => {
@@ -61,6 +54,16 @@ impl super::Version for V1_16_3 {
                 break;
             }
         }
+
+        println!("Logged into server...");
+
+        // We should now be succesfully logged into the server
+        // and ready to accept player info and such
+        let join_game_packet = client.conn.read_packet::<RawPacket753>().map_err(|e| e.to_string())?.ok_or("Expected a Join game packet, did not receive any!")?;
+        if let Packet753::PlayJoinGame(p) = join_game_packet {
+            println!("join game packet: {:?}", p);
+        }
+
         Ok(())
     }
 }

@@ -1,8 +1,5 @@
 use client_lib::versions::V1_16_3;
-use client_lib::{
-    MpClient,
-    User,
-};
+use client_lib::MpClient;
 
 fn main() {
     println!("Hello, world!");
