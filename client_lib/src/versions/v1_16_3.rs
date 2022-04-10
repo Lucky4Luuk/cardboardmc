@@ -63,7 +63,36 @@ impl super::Version for V1_16_3 {
         // and ready to accept player info and such
         let join_game_packet = client.conn.read_packet::<RawPacket753>().map_err(|e| e.to_string())?.ok_or("Expected a Join game packet, did not receive any!")?;
         if let Packet753::PlayJoinGame(p) = join_game_packet {
-            println!("join game packet: {:?}", p);
+            // println!("join game packet: {:?}", p);
+        } else {
+            return Err(format!("Server sent the wrong packet! Packet sent: {:?}", join_game_packet));
+        }
+
+        'optional: loop {
+            if let Some(next_packet) = client.conn.read_packet::<RawPacket753>().map_err(|e| e.to_string())? {
+                match next_packet {
+                    Packet753::PlayServerPluginMessage(p) => {
+                        println!("play server plugin message: {:?}", p);
+                    },
+                    Packet753::PlayServerDifficulty(p) => {
+                        println!("Server difficulty: {:?}", p.difficulty);
+                    },
+                    Packet753::PlayServerPlayerAbilities(p) => {
+                        println!("play server player abilities: {:?}", p);
+                    },
+                    Packet753::PlayServerHeldItemChange(p) => {
+                        println!("play server held item change: {:?}", p);
+                    },
+                    Packet753::PlayClientSettings(p) => {
+                        println!("play client settings: {:?}", p);
+                        break 'optional;
+                    },
+                    Packet753::PlayDeclareRecipes(p) => {},
+                    _ => return Err(format!("Server sent the wrong packet! Packet sent: {:?}", next_packet)),
+                }
+            } else {
+                return Err("Server did not send a packet!".to_string());
+            }
         }
 
         Ok(())
