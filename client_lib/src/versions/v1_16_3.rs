@@ -68,7 +68,7 @@ impl super::Version for V1_16_3 {
             return Err(format!("Server sent the wrong packet! Packet sent: {:?}", join_game_packet));
         }
 
-        'optional: loop {
+        'receive: loop {
             if let Some(next_packet) = client.conn.read_packet::<RawPacket753>().map_err(|e| e.to_string())? {
                 match next_packet {
                     Packet753::PlayServerPluginMessage(p) => {
@@ -83,15 +83,21 @@ impl super::Version for V1_16_3 {
                     Packet753::PlayServerHeldItemChange(p) => {
                         println!("play server held item change: {:?}", p);
                     },
-                    Packet753::PlayClientSettings(p) => {
-                        println!("play client settings: {:?}", p);
-                        break 'optional;
-                    },
-                    Packet753::PlayDeclareRecipes(p) => {},
+                    Packet753::PlayDeclareRecipes(_p) => {},
+                    Packet753::PlayTags(_p) => {},
+                    Packet753::PlayEntityStatus(_p) => {},
+                    Packet753::PlayDeclareCommands(_p) => {},
+                    Packet753::PlayUnlockRecipes(_p) => {},
+                    Packet753::PlayServerPlayerPositionAndLook(_p) => {},
+                    Packet753::PlayPlayerInfo(_p) => {}, //Handles 2 cases it seems?
+                    Packet753::PlayChunkData(_p) => {},
+                    Packet753::PlayWorldBorder(_p) => {},
+                    Packet753::PlaySpawnPosition(_p) => {},
                     _ => return Err(format!("Server sent the wrong packet! Packet sent: {:?}", next_packet)),
                 }
             } else {
-                return Err("Server did not send a packet!".to_string());
+                // return Err("Server did not send a packet!".to_string());
+                break 'receive;
             }
         }
 
