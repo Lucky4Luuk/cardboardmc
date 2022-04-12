@@ -7,4 +7,5 @@ pub use v1_16_3::V1_16_3;
 
 pub trait Version {
     fn login(client: &mut MpClient<Self>, ip: String, port: u16) -> Result<(), String> where Self: std::marker::Sized;
+    fn handle_packet(client: &mut MpClient<Self>) -> bool where Self: std::marker::Sized;
 }
