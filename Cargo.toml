@@ -7,3 +7,6 @@ edition = "2021"
 
 [dependencies]
 client_lib = { path = "client_lib" }
+
+log = "0.4"
+pretty_env_logger = "*"

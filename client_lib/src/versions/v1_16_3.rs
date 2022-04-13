@@ -33,20 +33,20 @@ impl super::Version for V1_16_3 {
         let mut expected_packets = 1;
         while expected_packets > 0 {
             expected_packets -= 1;
-            println!("Waiting for packet...");
+            debug!("Waiting for packet...");
             if let Some(next_packet) = client.conn.read_packet::<RawPacket753>().map_err(|e| e.to_string())? {
                 match next_packet {
                     Packet753::LoginEncryptionRequest(p) => {
-                        println!("encryption packet: {:?}", p);
+                        trace!("encryption packet: {:?}", p);
                         todo!("Implement encryption for login to online mode servers");
                     },
                     Packet753::LoginSuccess(_p) => {
-                        println!("Login success!");
+                        debug!("Login success!");
                         client.conn.set_state(State::Play);
                         break;
                     },
                     Packet753::LoginSetCompression(p) => {
-                        println!("compression packet: {:?}", p);
+                        trace!("compression packet: {:?}", p);
                         client.compression_threshold = *p.threshold;
                         client.conn.set_compression_threshold(Some(*p.threshold));
                         expected_packets += 1; // We expect the next packet to be a LoginSuccess packet
@@ -58,7 +58,7 @@ impl super::Version for V1_16_3 {
             }
         }
 
-        println!("Logged into server...");
+        debug!("Logged into server...");
 
         // We should now be succesfully logged into the server
         // and ready to accept player info and such
@@ -88,9 +88,9 @@ impl super::Version for V1_16_3 {
                     Packet753::PlayDeclareCommands(_p) => {},               // 20
                     Packet753::PlayUnlockRecipes(_p) => {},                 // 21
                     Packet753::PlayServerPlayerPositionAndLook(p) => {      // 22/30
-                        println!("server player pos look: {:?}", p);
+                        trace!("server player pos look: {:?}", p);
                         player_location = Some(p.location);
-                        println!("Sending teleport confirm...");
+                        debug!("Sending teleport confirm...");
                         client.conn.write_packet(Packet753::PlayTeleportConfirm { 0: PlayTeleportConfirmSpec {
                             teleport_id: p.teleport_id,
                         } }).expect("Failed to write packet to server!");

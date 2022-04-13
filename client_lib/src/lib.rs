@@ -1,3 +1,5 @@
+#[macro_use] extern crate log;
+
 use std::marker::PhantomData;
 
 use craftio_rs::{
@@ -9,6 +11,9 @@ use versions::Version;
 
 mod userdata;
 pub use userdata::*;
+
+pub mod assets;
+pub mod world;
 
 pub type Connection = CraftConnection<std::io::BufReader<std::net::TcpStream>, std::net::TcpStream>;
 
