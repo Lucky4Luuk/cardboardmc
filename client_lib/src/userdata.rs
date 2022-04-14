@@ -27,7 +27,7 @@ pub fn auth() -> User {
         }
     }
 
-    let mca = device_code.authenticate(client).unwrap(); // Never use unwrap here, it's used in this example for simplicity
+    let mca = device_code.authenticate(client).unwrap(); //TODO: Don't unwrap here, we need to handle authentication errors
 
     User {
         login: UserLogin {
