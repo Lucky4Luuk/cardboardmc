@@ -2,7 +2,7 @@ use std::collections::HashMap;
 
 use super::block::{BlockId, BlockPos};
 
-pub type ChunkPos = (usize, usize);
+pub type ChunkPos = (i32, i32);
 
 pub struct Chunk {
     /// Stores blocks in chunk

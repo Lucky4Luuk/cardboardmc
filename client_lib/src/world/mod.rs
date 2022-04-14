@@ -40,4 +40,20 @@ impl World {
         let chunk = self.loaded_chunks.get_mut(&chunk_pos).unwrap();
         chunk.write_block(block_id, block_pos);
     }
+
+    pub fn has_chunk(&self, chunk_pos: ChunkPos) -> bool {
+        self.loaded_chunks.contains_key(&chunk_pos)
+    }
+
+    pub fn new_chunk(&mut self, chunk_pos: ChunkPos) {
+        self.loaded_chunks.insert(chunk_pos, Chunk::empty());
+    }
+
+    pub fn get_chunk(&self, chunk_pos: ChunkPos) -> Option<&Chunk> {
+        self.loaded_chunks.get(&chunk_pos)
+    }
+
+    pub fn get_chunk_mut(&mut self, chunk_pos: ChunkPos) -> Option<&mut Chunk> {
+        self.loaded_chunks.get_mut(&chunk_pos)
+    }
 }

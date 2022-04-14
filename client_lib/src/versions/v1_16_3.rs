@@ -126,7 +126,7 @@ impl super::Version for V1_16_3 {
                 Packet753::PlayUnlockRecipes(_p) => {},
                 Packet753::PlayServerPlayerPositionAndLook(_p) => {},
                 Packet753::PlayPlayerInfo(_p) => {},
-                Packet753::PlayChunkData(_p) => {},
+                Packet753::PlayChunkData(p) => handle_chunk_packet(client, p),
                 Packet753::PlayWorldBorder(_p) => {},
                 Packet753::PlaySpawnPosition(_p) => {},
                 Packet753::PlayUpdateViewPosition(_p) => {},
@@ -147,4 +147,9 @@ impl super::Version for V1_16_3 {
             false
         }
     }
+}
+
+fn handle_chunk_packet(client: &mut MpClient<V1_16_3>, chunk_data: PlayChunkDataWrapper) {
+    let chunk_pos: (i32, i32) = (chunk_data.data.position.x, chunk_data.data.position.z);
+    let chunk = client.get_chunk(chunk_pos);
 }
