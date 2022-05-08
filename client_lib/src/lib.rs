@@ -74,4 +74,12 @@ impl<V: Version> MpClient<V> {
         }
         self.world.get_chunk_mut(chunk_pos).unwrap()
     }
+
+    pub fn update(&mut self) {
+        'packet_handling: loop {
+            if !V::handle_packet(self) {
+                break 'packet_handling;
+            }
+        }
+    }
 }

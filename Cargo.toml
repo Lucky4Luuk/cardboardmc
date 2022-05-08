@@ -10,3 +10,9 @@ client_lib = { path = "client_lib" }
 
 log = "0.4"
 pretty_env_logger = "*"
+
+glfw = "0.43.0"
+luminance = "0.46.0"
+luminance-derive = "0.10.0"
+luminance-front = "0.6.1"
+luminance-glfw = "0.18.1"

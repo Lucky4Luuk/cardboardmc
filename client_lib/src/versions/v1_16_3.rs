@@ -120,13 +120,18 @@ impl super::Version for V1_16_3 {
     fn handle_packet(client: &mut MpClient<Self>) -> bool {
         if let Some(next_packet) = client.conn.read_packet::<RawPacket753>().unwrap() {
             match next_packet {
+                Packet753::PlayServerKeepAlive(p) => {
+                    client.conn.write_packet(Packet753::PlayClientKeepAlive(PlayClientKeepAliveSpec {
+                        id: p.id,
+                    })).expect("Failed to write packet!");
+                },
                 Packet753::PlayServerHeldItemChange(_p) => {},
                 Packet753::PlayTags(_p) => {},
                 Packet753::PlayEntityStatus(_p) => {},
                 Packet753::PlayUnlockRecipes(_p) => {},
                 Packet753::PlayServerPlayerPositionAndLook(_p) => {},
                 Packet753::PlayPlayerInfo(_p) => {},
-                Packet753::PlayChunkData(p) => handle_chunk_packet(client, p),
+                Packet753::PlayChunkData(p) => handle_chunk_packet(client, p.data),
                 Packet753::PlayWorldBorder(_p) => {},
                 Packet753::PlaySpawnPosition(_p) => {},
                 Packet753::PlayUpdateViewPosition(_p) => {},
@@ -149,7 +154,8 @@ impl super::Version for V1_16_3 {
     }
 }
 
-fn handle_chunk_packet(client: &mut MpClient<V1_16_3>, chunk_data: PlayChunkDataWrapper) {
-    let chunk_pos: (i32, i32) = (chunk_data.data.position.x, chunk_data.data.position.z);
-    let chunk = client.get_chunk(chunk_pos);
+fn handle_chunk_packet(client: &mut MpClient<V1_16_3>, chunk_data: ChunkData) {
+    let chunk_pos: (i32, i32) = (chunk_data.position.x, chunk_data.position.z);
+    let chunk = client.get_chunk_mut(chunk_pos);
+    println!("chunk data len: {}", chunk_data.data.len());
 }
